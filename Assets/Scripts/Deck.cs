@@ -34,6 +34,35 @@ public class Deck : MonoBehaviour
          * En principio, la posición de cada valor se deberá corresponder con la posición de faces. 
          * Por ejemplo, si en faces[1] hay un 2 de corazones, en values[1] debería haber un 2.
          */
+         //contador de cartas
+        int cartas = 0;
+
+        //recorremos todas las cartas de todos los palos
+        for (int i=0; i <52; i++){
+            //empezamos por la primera y vamos sumando de uno en uno
+            cartas++;
+            //si es menor que diez o diez
+            if(cartas<=10){
+                //si no es un as
+                if(cartas!= 1){
+                    //le atribuimos el valor a la carta
+                    values[i]=cartas;
+                }
+                else{
+                    //si es un as le asignamos el 11 que es "los puntos que vale"
+                    values[i]=11;
+                }
+            }
+            else{
+                //si llegamos a 13 carta reiniciamos el contador
+                if(cartas==13){
+                    cartas=0;
+                }
+                //a partir de la carta 10 le asignamos el valor 10 que es los puntos que vale
+                values[i]=10;
+            }
+        }
+        
     }
 
     private void ShuffleCards()
