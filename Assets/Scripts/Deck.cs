@@ -14,7 +14,9 @@ public class Deck : MonoBehaviour
     public Text probMessage;
 
     public int[] values = new int[52];
-    int cardIndex = 0;    
+    int cardIndex = 0; 
+
+
        
     private void Awake()
     {    
@@ -151,6 +153,11 @@ public class Deck : MonoBehaviour
             finalMessage.text = "Has ganado!";
             PantallaFinPartida();
         }
+        else if(puntosJugador == puntosDealer){
+            //El mensaje ya declarado en PlayAgain lo cambiamos
+            finalMessage.text = "Empate!";
+            PantallaFinPartida();
+        }
     }
 
      private void PantallaFinPartida()
@@ -159,6 +166,8 @@ public class Deck : MonoBehaviour
         hitButton.interactable = false;
     }
 
+
+//----------------------------------------------------------------------------------------------------------------------
     void StartGame()
     {
         //Creamos las variables para los puntos y el blackjack
@@ -200,6 +209,10 @@ public class Deck : MonoBehaviour
          * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
          * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
          */
+
+        //Creamos distintas variables para los puntos del jugador y del dealer
+
+
     }
 
     void PushDealer()
@@ -226,13 +239,19 @@ public class Deck : MonoBehaviour
         /*TODO: 
          * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
          */
+
+        if (dealer.GetComponent<CardHand>().cards.Count == 2)
+        {
+          dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true); 
+        }
         
         //Repartimos carta al jugador
         PushPlayer();
 
         /*TODO:
          * Comprobamos si el jugador ya ha perdido y mostramos mensaje
-         */      
+         */  
+         VerificacionFinalPartida(player.GetComponent<CardHand>().GetPoints(), dealer.GetComponent<CardHand>().GetPoints());    
 
     }
 
@@ -241,12 +260,24 @@ public class Deck : MonoBehaviour
         /*TODO: 
          * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
          */
+        if (dealer.GetComponent<CardHand>().cards.Count == 2)
+        {
+            dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
+        }
 
         /*TODO:
          * Repartimos cartas al dealer si tiene 16 puntos o menos
          * El dealer se planta al obtener 17 puntos o más
          * Mostramos el mensaje del que ha ganado
-         */                
+         */   
+        if(dealer.GetComponent<CardHand>().GetPoints() <= 16)
+        {
+            PushDealer();
+        }
+        else{
+            finalMessage.text = "Has ganado!";
+            PantallaFinPartida();
+        }
          
     }
 
