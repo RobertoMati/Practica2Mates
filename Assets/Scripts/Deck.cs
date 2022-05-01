@@ -33,6 +33,8 @@ public class Deck : MonoBehaviour
 
     public Text textApuesta;
 
+    public Toggle toggle;
+
 
 
        
@@ -305,6 +307,7 @@ public class Deck : MonoBehaviour
         cardIndex = 0;
         ShuffleCards();
         StartGame();
+        DesactivarToggle();
         apuesta = false;
     }
 
@@ -316,7 +319,7 @@ public class Deck : MonoBehaviour
         if (Apuesta + 10 <= Banca)
         {
             Apuesta += 10;
-            textApuesta.text = "Apuesta: " + Apuesta;
+            textApuesta.text = Apuesta.ToString();
             TextoApuesta(Apuesta);
         }
     }
@@ -327,14 +330,14 @@ public class Deck : MonoBehaviour
         if (Apuesta - 10 >= 0)
         {
             Apuesta -= 10;
-            textApuesta.text = "Apuesta: " + Apuesta;
+            textApuesta.text = Apuesta.ToString();
             TextoApuesta(Apuesta);
         }
     }
 
     private void TextoApuesta(int apuestaActualizada)
     {
-        textApuesta.text = "Apuesta: " + apuestaActualizada;
+        textApuesta.text = apuestaActualizada.ToString();
         
     }
 
@@ -372,7 +375,12 @@ public class Deck : MonoBehaviour
 
     private void TextoBanca(int valorBancaActualizado)
     {
-        BancaValor.text = "Banca: " + valorBancaActualizado;
+        BancaValor.text = "" + valorBancaActualizado;
+    }
+
+    private void DesactivarToggle()
+    {
+        toggle.isOn = false;
     }
     
 }
