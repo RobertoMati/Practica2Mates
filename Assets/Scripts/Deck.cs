@@ -129,33 +129,16 @@ public class Deck : MonoBehaviour
     //Funcion que se ejecuta para acabar el juego
     private void VerificacionFinalPartida(int puntosJugador, int puntosDealer)
     {
-        //Si los puntos del jugador son iguales a 21
-        if(puntosJugador == 21){
+        //Si los puntos del jugador son iguales a 21 o los puntos del dealer son mayores a 21 o si el dealer tiene 17 o más pero menos que el jugador
+        if(puntosJugador == 21 || puntosDealer > 21 || (puntosDealer >= 17 && puntosDealer < puntosJugador)){
             //El mensaje ya declarado en PlayAgain lo cambiamos
-            finalMessage.text = "Blackjack! Has ganado!";
+            finalMessage.text = "Has ganado! Tienes " + puntosJugador + " puntos y el Dealer tiene " + puntosDealer + " puntos";
             PantallaFinPartida();
         }
         //Si los puntos del dealer son iguales a 21
-        else if(puntosJugador > 21){
+        else if(puntosJugador > 21 || puntosDealer == 21 || (puntosDealer >= 17 && puntosDealer > puntosJugador)){
             //El mensaje ya declarado en PlayAgain lo cambiamos
-            finalMessage.text = "Has perdido!";
-            PantallaFinPartida();
-        }
-        //Si los puntos del dealer son iguales a 21
-        else if(puntosDealer == 21){
-            //El mensaje ya declarado en PlayAgain lo cambiamos
-            finalMessage.text = "Blackjack del Dealer! Has perdido!";
-            PantallaFinPartida();
-        }
-        //Si los puntos del dealer son iguales a 21
-        else if(puntosDealer > 21){
-            //El mensaje ya declarado en PlayAgain lo cambiamos
-            finalMessage.text = "Has ganado!";
-            PantallaFinPartida();
-        }
-        else if(puntosJugador == puntosDealer){
-            //El mensaje ya declarado en PlayAgain lo cambiamos
-            finalMessage.text = "Empate!";
+            finalMessage.text = "Has perdido! Tienes " + puntosJugador + " puntos y el Dealer tiene " + puntosDealer + " puntos";
             PantallaFinPartida();
         }
     }
@@ -274,8 +257,9 @@ public class Deck : MonoBehaviour
         {
             PushDealer();
         }
-        else{
-            finalMessage.text = "Has ganado!";
+        else if(dealer.GetComponent<CardHand>().GetPoints() > 16)
+        {
+            finalMessage.text = "Has ganado! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
             PantallaFinPartida();
         }
          
