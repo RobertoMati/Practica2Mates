@@ -86,6 +86,11 @@ public class CardHand : MonoBehaviour
         points = val;
        
     }
+
+    public int GetPoints()
+    {
+        return points;
+    }
      
 
 }
