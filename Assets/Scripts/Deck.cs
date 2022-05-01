@@ -4,6 +4,7 @@ using System.Collections;
 using System;
 using System.Linq;
 using Random = UnityEngine.Random;
+using System.Collections.Generic;
 
 public class Deck : MonoBehaviour
 {
@@ -236,6 +237,7 @@ public class Deck : MonoBehaviour
         int valorTotalDealer = dealer.GetComponent<CardHand>().GetPoints();
         int valorTotalJugador = player.GetComponent<CardHand>().GetPoints();
         int valorOcultoDealer = dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().value;
+        //Debug.Log("Valor total del dealer: " + valorOcultoDealer);
         int casosFavorables;
 
         //Con esto damos a entender que acabamos de empezar la partida, por tanto, el dealer puede tener una carta oculta
@@ -251,6 +253,7 @@ public class Deck : MonoBehaviour
         //El dealer tiene una carta oculta
         if(estadoCarta){
             int PuntosDealerTotales = valorTotalDealer - valorOcultoDealer;
+            //Debug.Log("Puntos del dealer: " + PuntosDealerTotales);
             //13 es el número de tipos de cartas que hay en el juego
             casosFavorables = 13 - valorTotalJugador + PuntosDealerTotales;
             //la f del 13 es para forzar que se trate como un float. Sin la f da o 0 o 1
@@ -267,12 +270,36 @@ public class Deck : MonoBehaviour
                 probabilidadRound = 0;
             }
 
-            probMessage.text = "Probabilidad de que el dealer tenga más puntuación que el jugador con una carta oculta: " + probabilidadRound + "%";
+            probMessage.text = "- Probabilidad de que el dealer tenga más puntuación que el jugador con una carta oculta: " + probabilidadRound + "%";
         }
     //------------------------------------------------
 
     //------------------------------------------------
         //Caso 2: Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+            //Para calcular la probabilidad, tenemos que ver los casos en los que se pasa de 21 sumándole, uno a uno, cada carta posible.
+            //Para ello, al valor máximo que tenemos, le restamos el valor total de puntos del jugador.
+            //Con esto, al numero de cartas que hay (13) le restamos lo obtenido anteriormente.
+            int valorRestado = 21 - valorTotalJugador;
+            casosFavorables = 13 - valorRestado;
+
+
+            //Otro método
+            List<string> listaValores = new List<string>();
+            for(int i = 0; i < 13; i++)
+            {
+                int x = valorTotalJugador + (i+1);
+                Debug.Log("Valor de la carta: " + valorTotalJugador);
+                listaValores.Add(x.ToString());
+                Debug.Log(listaValores[i]);
+            }
+            
+
+
+
+            //Dividimos el valor obtenido entrero entre el número de cartas que hay (13)
+            probabilidad = casosFavorables / 13f;
+            float probabilidadRound2 = Mathf.Round(probabilidad * 100);
+            probMessage2.text = "- Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta: " + probabilidadRound2 + "%";
             
         
     }
