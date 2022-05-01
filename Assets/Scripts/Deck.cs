@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 public class Deck : MonoBehaviour
@@ -12,9 +15,13 @@ public class Deck : MonoBehaviour
     public Button playAgainButton;
     public Text finalMessage;
     public Text probMessage;
+    public Text probMessage2;
+    public Text probMessage3;
 
     public int[] values = new int[52];
     int cardIndex = 0; 
+
+    private bool estadoCarta;
 
 //------------------------------------------------------------
     //Declaración Extra
@@ -154,18 +161,23 @@ public class Deck : MonoBehaviour
     private void VerificacionFinalPartida(int puntosJugador, int puntosDealer)
     {
         //Si los puntos del jugador son iguales a 21 o los puntos del dealer son mayores a 21 o si el dealer tiene 17 o más pero menos que el jugador
-        if(puntosJugador == 21 || puntosDealer > 21 || (puntosDealer >= 17 && puntosDealer < puntosJugador && puntosJugador <= 21)){
+        if(puntosJugador == 21 || puntosDealer > 21){
             //El mensaje ya declarado en PlayAgain lo cambiamos
             finalMessage.text = "Has ganado! Tienes " + puntosJugador + " puntos y el Dealer tiene " + puntosDealer + " puntos";
             PantallaFinPartida();
             ApuestaGanada();
         }
         //Si los puntos del dealer son iguales a 21
-        else if(puntosJugador > 21 || puntosDealer == 21){
+        else if((puntosJugador > 21 && puntosDealer<=21) || puntosJugador > 21 || puntosDealer == 21 ){
             //El mensaje ya declarado en PlayAgain lo cambiamos
             finalMessage.text = "Has perdido! Tienes " + puntosJugador + " puntos y el Dealer tiene " + puntosDealer + " puntos";
             PantallaFinPartida();
             ApuestaPerdida();
+        }
+        else if(puntosJugador ==21 && puntosDealer==21){
+            //El mensaje ya declarado en PlayAgain lo cambiamos
+            finalMessage.text = "Empate! Tienes " + puntosJugador + " puntos y el Dealer tiene " + puntosDealer + " puntos";
+            PantallaFinPartida();
         }
     }
 
@@ -218,9 +230,51 @@ public class Deck : MonoBehaviour
          * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
          */
 
-        //Creamos distintas variables para los puntos del jugador y del dealer
+    //------------------------------------------------
+        //Caso 1: probabilidad de que el dealer tenga más puntuación que el jugador con una carta oculta
+        float probabilidad;
+        int valorTotalDealer = dealer.GetComponent<CardHand>().GetPoints();
+        int valorTotalJugador = player.GetComponent<CardHand>().GetPoints();
+        int valorOcultoDealer = dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().value;
+        int casosFavorables;
 
+        //Con esto damos a entender que acabamos de empezar la partida, por tanto, el dealer puede tener una carta oculta
+        if(dealer.GetComponent<CardHand>().cards.Count == 2 && player.GetComponent<CardHand>().cards.Count == 2)
+        {
+            estadoCarta = true;
+        }
+        else
+        {
+            estadoCarta = false;
+        }
 
+        //El dealer tiene una carta oculta
+        if(estadoCarta){
+            int PuntosDealerTotales = valorTotalDealer - valorOcultoDealer;
+            //13 es el número de tipos de cartas que hay en el juego
+            casosFavorables = 13 - valorTotalJugador + PuntosDealerTotales;
+            //la f del 13 es para forzar que se trate como un float. Sin la f da o 0 o 1
+            probabilidad = casosFavorables / 13f;
+            float probabilidadRound = Mathf.Round(probabilidad * 100);
+            //Si probabilidadRound es mayor a 100, se le asigna 100
+            if(probabilidadRound > 100)
+            {
+                probabilidadRound = 100;
+            }
+            //Si probabilidadRound es menor a 0, se le asigna 0
+            if(probabilidadRound < 0)
+            {
+                probabilidadRound = 0;
+            }
+
+            probMessage.text = "Probabilidad de que el dealer tenga más puntuación que el jugador con una carta oculta: " + probabilidadRound + "%";
+        }
+    //------------------------------------------------
+
+    //------------------------------------------------
+        //Caso 2: Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+            
+        
     }
 
     void PushDealer()
@@ -278,23 +332,18 @@ public class Deck : MonoBehaviour
          * El dealer se planta al obtener 17 puntos o más
          * Mostramos el mensaje del que ha ganado
          */   
-        if(dealer.GetComponent<CardHand>().GetPoints() <= 16)
+        if(dealer.GetComponent<CardHand>().GetPoints() < 17)
         {
             PushDealer();
         }
-        else if(dealer.GetComponent<CardHand>().GetPoints() > 16 && dealer.GetComponent<CardHand>().GetPoints() < player.GetComponent<CardHand>().GetPoints() && dealer.GetComponent<CardHand>().GetPoints() < 21 )
+        else if(dealer.GetComponent<CardHand>().GetPoints() >16)
         {
-            finalMessage.text = "Has ganado! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
+            /*finalMessage.text = "Has ganado! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
             PantallaFinPartida();
-            ApuestaGanada();
+            ApuestaGanada();*/
+            VerificacionFinalPartida(player.GetComponent<CardHand>().GetPoints(), dealer.GetComponent<CardHand>().GetPoints());
         }
-        else{
-            finalMessage.text = "Has perdido! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
-            PantallaFinPartida();
-            ApuestaPerdida();
-        }
-        
-         
+        VerificacionFinalPartida(player.GetComponent<CardHand>().GetPoints(), dealer.GetComponent<CardHand>().GetPoints());
     }
 
     public void PlayAgain()
