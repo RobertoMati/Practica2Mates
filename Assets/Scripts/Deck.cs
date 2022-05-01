@@ -25,12 +25,14 @@ public class Deck : MonoBehaviour
 
     //Mutiplos para el valor de la apuesta
     private int Apuesta = 10;
+    public bool apuesta = false;
 
     //Botones Apuesta
     public Button AumentarA;
     public Button DisminuirA;
 
     public Text textApuesta;
+
 
 
        
@@ -128,6 +130,7 @@ public class Deck : MonoBehaviour
             finalMessage.text = "Blackjack! Has ganado!";
             dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
             PantallaFinPartida();
+            ApuestaGanada();
             return true;
         }
         //Si los puntos del dealer son iguales a 21
@@ -136,6 +139,7 @@ public class Deck : MonoBehaviour
             finalMessage.text = "Blackjack del Dealer! Has perdido!";
             dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
             PantallaFinPartida();
+            ApuestaPerdida();
             return true;
         }
         else{
@@ -148,16 +152,18 @@ public class Deck : MonoBehaviour
     private void VerificacionFinalPartida(int puntosJugador, int puntosDealer)
     {
         //Si los puntos del jugador son iguales a 21 o los puntos del dealer son mayores a 21 o si el dealer tiene 17 o más pero menos que el jugador
-        if(puntosJugador == 21 || puntosDealer > 21 || (puntosDealer >= 17 && puntosDealer < puntosJugador)){
+        if(puntosJugador == 21 || puntosDealer > 21 || (puntosDealer >= 17 && puntosDealer < puntosJugador && puntosJugador <= 21)){
             //El mensaje ya declarado en PlayAgain lo cambiamos
             finalMessage.text = "Has ganado! Tienes " + puntosJugador + " puntos y el Dealer tiene " + puntosDealer + " puntos";
             PantallaFinPartida();
+            ApuestaGanada();
         }
         //Si los puntos del dealer son iguales a 21
         else if(puntosJugador > 21 || puntosDealer == 21){
             //El mensaje ya declarado en PlayAgain lo cambiamos
             finalMessage.text = "Has perdido! Tienes " + puntosJugador + " puntos y el Dealer tiene " + puntosDealer + " puntos";
             PantallaFinPartida();
+            ApuestaPerdida();
         }
     }
 
@@ -196,8 +202,8 @@ public class Deck : MonoBehaviour
             VerificacionBlackjack(puntosJugador,puntosDealer);
         }
 
-        TextoApuesta();
-        //TextoBanca();
+        TextoApuesta(Apuesta);
+        TextoBanca(Banca);
 
     }
 
@@ -274,11 +280,18 @@ public class Deck : MonoBehaviour
         {
             PushDealer();
         }
-        else if(dealer.GetComponent<CardHand>().GetPoints() > 16 && (dealer.GetComponent<CardHand>().GetPoints() < player.GetComponent<CardHand>().GetPoints()) )
+        else if(dealer.GetComponent<CardHand>().GetPoints() > 16 && dealer.GetComponent<CardHand>().GetPoints() < player.GetComponent<CardHand>().GetPoints() && dealer.GetComponent<CardHand>().GetPoints() < 21 )
         {
             finalMessage.text = "Has ganado! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
             PantallaFinPartida();
+            ApuestaGanada();
         }
+        else{
+            finalMessage.text = "Has perdido! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
+            PantallaFinPartida();
+            ApuestaPerdida();
+        }
+        
          
     }
 
@@ -292,33 +305,74 @@ public class Deck : MonoBehaviour
         cardIndex = 0;
         ShuffleCards();
         StartGame();
+        apuesta = false;
     }
 
     //----------------------------------------------------------
     //EXTRA
     //Funcion para aumentar la apuesta
-    public void AumentarApuesta()
+    private void AumentarApuesta()
     {
         if (Apuesta + 10 <= Banca)
         {
             Apuesta += 10;
             textApuesta.text = "Apuesta: " + Apuesta;
+            TextoApuesta(Apuesta);
         }
     }
 
     //Funcion para disminuir la apuesta
-    public void DisminuirApuesta()
+    private void DisminuirApuesta()
     {
         if (Apuesta - 10 >= 0)
         {
             Apuesta -= 10;
             textApuesta.text = "Apuesta: " + Apuesta;
+            TextoApuesta(Apuesta);
         }
     }
 
-    private void TextoApuesta()
+    private void TextoApuesta(int apuestaActualizada)
     {
-        textApuesta.text = "Apuesta: " + Apuesta;
+        textApuesta.text = "Apuesta: " + apuestaActualizada;
+        
+    }
+
+    public void GuardarApuesta()
+    {
+        if (apuesta)
+        {
+            apuesta = false;
+        }
+        else
+        {
+            apuesta = true;
+        }
+    }
+
+    private void ApuestaGanada()
+    {
+        if (apuesta)
+        {
+            Banca += (Apuesta*2);
+            TextoBanca(Banca);
+        }
+    }
+
+    private void ApuestaPerdida()
+    {
+        if (apuesta)
+        {
+            Banca -= Apuesta;
+            TextoBanca(Banca);
+
+        }
+    }
+
+
+    private void TextoBanca(int valorBancaActualizado)
+    {
+        BancaValor.text = "Banca: " + valorBancaActualizado;
     }
     
 }
