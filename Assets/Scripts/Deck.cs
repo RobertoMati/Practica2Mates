@@ -181,7 +181,7 @@ public class Deck : MonoBehaviour
         blackJack = VerificacionBlackjack(puntosJugador, puntosDealer);
         
         //Si el blackjack cambia a true
-        if (blackJack == true)
+        if (blackJack == false)
         { 
             VerificacionFinalPartida(puntosJugador,puntosDealer);
         }
