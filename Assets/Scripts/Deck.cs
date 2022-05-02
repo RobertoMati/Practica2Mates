@@ -27,6 +27,7 @@ public class Deck : MonoBehaviour
 //------------------------------------------------------------
     //Declaración Extra
     public Text BancaValor;
+    public Text avisoHit;
 
     //Valor inicial de la banca
     private int Banca = 1000;
@@ -219,6 +220,7 @@ public class Deck : MonoBehaviour
 
         TextoApuesta(Apuesta);
         TextoBanca(Banca);
+        avisoHit.text = "";
 
     }
 
@@ -324,7 +326,7 @@ public class Deck : MonoBehaviour
             probabilidad = listaValores.Count / 13f;
             //Lo redondeo
             float probabilidadRound2 = Mathf.Round(probabilidad * 100);
-            probMessage2.text = "- Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta: " + probabilidadRound2 + "%";
+            probMessage2.text = "- Probabilidad de que el jugador obtenga más de 21 si pide una carta: " + probabilidadRound2 + "%";
     //------------------------------------------------
     }
 
@@ -392,6 +394,7 @@ public class Deck : MonoBehaviour
             /*finalMessage.text = "Has ganado! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
             PantallaFinPartida();
             ApuestaGanada();*/
+            avisoHit.text = "El Dealer tiene 17 o más puntos y no puede pedir más cartas, por lo que no puedes plantarte.";
             VerificacionFinalPartida(player.GetComponent<CardHand>().GetPoints(), dealer.GetComponent<CardHand>().GetPoints());
         }
         VerificacionFinalPartida(player.GetComponent<CardHand>().GetPoints(), dealer.GetComponent<CardHand>().GetPoints());
