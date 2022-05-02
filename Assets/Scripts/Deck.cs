@@ -391,9 +391,6 @@ public class Deck : MonoBehaviour
         }
         else if(dealer.GetComponent<CardHand>().GetPoints() >16)
         {
-            /*finalMessage.text = "Has ganado! Tienes " + player.GetComponent<CardHand>().GetPoints() + " puntos y el Dealer tiene " + dealer.GetComponent<CardHand>().GetPoints() + " puntos";
-            PantallaFinPartida();
-            ApuestaGanada();*/
             avisoHit.text = "El Dealer tiene 17 o más puntos y no puede pedir más cartas, por lo que no puedes plantarte.";
             VerificacionFinalPartida(player.GetComponent<CardHand>().GetPoints(), dealer.GetComponent<CardHand>().GetPoints());
         }
