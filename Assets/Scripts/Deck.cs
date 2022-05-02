@@ -275,33 +275,30 @@ public class Deck : MonoBehaviour
     //------------------------------------------------
 
     //------------------------------------------------
-        //Caso 2: Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
-            //Para calcular la probabilidad, tenemos que ver los casos en los que se pasa de 21 sumándole, uno a uno, cada carta posible.
-            //Para ello, al valor máximo que tenemos, le restamos el valor total de puntos del jugador.
-            //Con esto, al numero de cartas que hay (13) le restamos lo obtenido anteriormente.
-            int valorRestado = 21 - valorTotalJugador;
-            casosFavorables = 13 - valorRestado;
-
-
-            //Otro método
-            List<string> listaValores = new List<string>();
+        //Caso 3: Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+            //Creo una lista para guardar los valores
+            List<int> listaValores = new List<int>();
+            //Hago un recorrido hasta 13 para contabilizar las cartas (A partir de 10 las ultimas son 10 igual, pero hay que contarlas)
             for(int i = 0; i < 13; i++)
             {
                 int x = valorTotalJugador + (i+1);
-                Debug.Log("Valor de la carta: " + valorTotalJugador);
-                listaValores.Add(x.ToString());
-                Debug.Log(listaValores[i]);
+                int y=0;
+                if(x>21)
+                {
+                    //Vamos sumando
+                    y = x - 21;
+                    //Igualamos
+                    casosFavorables = y;
+                    //Añadimos el valor a la lista
+                    listaValores.Add(casosFavorables);
+                }  
             }
-            
-
-
-
-            //Dividimos el valor obtenido entrero entre el número de cartas que hay (13)
-            probabilidad = casosFavorables / 13f;
+            //Consigo el valor de la lista y lo divido entre 13, para obtener la probabilidad
+            probabilidad = listaValores.Count / 13f;
+            //Lo redondeo
             float probabilidadRound2 = Mathf.Round(probabilidad * 100);
             probMessage2.text = "- Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta: " + probabilidadRound2 + "%";
-            
-        
+    //------------------------------------------------
     }
 
     void PushDealer()
