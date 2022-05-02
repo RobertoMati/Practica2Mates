@@ -275,7 +275,30 @@ public class Deck : MonoBehaviour
     //------------------------------------------------
 
     //------------------------------------------------
-
+        //Caso 2: probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+        //Creo una lista para guardar los valores
+            List<int> listaEntre = new List<int>();
+            //Hago un recorrido hasta 13 para contabilizar las cartas (A partir de 10 las ultimas son 10 igual, pero hay que contarlas)
+            for(int i = 0; i < 13; i++)
+            {
+                int x = valorTotalJugador + (i+1);
+                int y=0;
+                if(17 <= x && x <= 21)
+                {
+                    //Vamos sumando
+                    y = x - 21;
+                    //Igualamos
+                    casosFavorables = y;
+                    //Añadimos el valor a la lista
+                    listaEntre.Add(casosFavorables);
+                }  
+            }
+            probabilidad = listaEntre.Count / 13f;
+            //Lo redondeo
+            float probabilidadRound3 = Mathf.Round(probabilidad * 100);
+            probMessage3.text = "- Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta: " + probabilidadRound3 + "%";
+   
+        
     //------------------------------------------------
 
     //------------------------------------------------
