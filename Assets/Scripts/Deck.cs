@@ -275,7 +275,11 @@ public class Deck : MonoBehaviour
     //------------------------------------------------
 
     //------------------------------------------------
-        //Caso 3: Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+
+    //------------------------------------------------
+
+    //------------------------------------------------
+        //Caso 3: Probabilidad de que el jugador obtenga más de 21 si pide una carta 
             //Creo una lista para guardar los valores
             List<int> listaValores = new List<int>();
             //Hago un recorrido hasta 13 para contabilizar las cartas (A partir de 10 las ultimas son 10 igual, pero hay que contarlas)
